@@ -1,1 +1,1 @@
-# Machine-Learning
+Claim reserve prediction Machine Learning project for Nordic Insurance Software
