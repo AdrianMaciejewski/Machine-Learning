@@ -1,27 +1,26 @@
-import numpy.random
-from DataReader import readData
-from FeatureNormalisation import normaliseFeatures
-from CostFunction import calculateSquareCost
-from GradientCalculation import calculateGradient
-from GradientDescent import runGradientDescent, displayLearningCurves
+from src.PredictionPipeline import PredictionPipeline
 
-XTrainingSet, YTrainingSet, XCrossValidationSet, YCrossValidationSet, XTestSet, YTestSet = readData(r"C:\Users\adma\Documents\ML project\data\test.txt")
 
-XTrainingSet = normaliseFeatures(XTrainingSet)
-XCrossValidationSet = normaliseFeatures(XCrossValidationSet)
-XTestSet = normaliseFeatures(XTestSet)
+def main():
+    shuffle_data = False
+    display_data_analysis = False
 
-XTrainingSet = numpy.insert(XTrainingSet, obj=0, values=1, axis=1)
-XCrossValidationSet = numpy.insert(XCrossValidationSet, obj=0, values=1,  axis=1)
-XTestSet = numpy.insert(XTestSet, obj=0, values=1,  axis=1)
+    prediction_pipeline = PredictionPipeline()
 
-lamb = 3
-alpha = 0.01
-gradientDescentIterationNumber = 100
+    if shuffle_data:
+        prediction_pipeline.shuffle_data(5)
 
-thetas = numpy.zeros((XTrainingSet.shape[1], 1))
-optimisedThetas = runGradientDescent(calculateGradient, XTrainingSet, YTrainingSet, thetas, lamb, alpha, gradientDescentIterationNumber)
+    prediction_pipeline.prepare_data()
 
-displayLearningCurves(calculateGradient, XTrainingSet, YTrainingSet, XCrossValidationSet, YCrossValidationSet, thetas, lamb, alpha, gradientDescentIterationNumber)
+    if display_data_analysis:
+        prediction_pipeline.exploratory_data_analysis()
 
-print(f'Test set cost equals {calculateSquareCost(XTestSet, YTestSet, optimisedThetas, lamb)}')
+    prediction_pipeline.train_ridge_regression()
+    prediction_pipeline.train_neural_network()
+    prediction_pipeline.train_random_forest()
+    prediction_pipeline.train_gradient_boosting()
+
+
+main()
+
+
